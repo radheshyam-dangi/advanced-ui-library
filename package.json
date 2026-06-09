@@ -1,8 +1,21 @@
 {
-  "name": "advanced-ui-library",
-  "private": true,
+  "name": "@radheshyam-dangi/advanced-ui-library",
+  "private": false,
   "version": "0.0.0",
   "type": "module",
+  "main": "./dist/advanced-ui-library.umd.js",
+  "module": "./dist/advanced-ui-library.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/radheshyam-dangi/advanced-ui-library"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

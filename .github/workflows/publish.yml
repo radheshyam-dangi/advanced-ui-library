@@ -1,0 +1,31 @@
+name: Compile & Publish Design System Assets
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Initialize Runtime Node.js Node Version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com/
+
+      - name: Synchronize Infrastructure Cache Dependencies
+        run: npm ci
+
+      - name: Trigger Component Production Compile Build
+        run: npm run build
+
+      - name: Distribute Assets Registry Target Authorization
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
