@@ -3,27 +3,30 @@ name: Compile & Publish Design System Assets
 on:
   push:
     branches:
-      - main # Triggers the workflow every time you push code to the main branch
+      - main
 
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to allow automated version bumping
-      packages: write # Required to publish packages to GitHub Packages
+      contents: write 
+      packages: write 
     steps:
       - uses: actions/checkout@v4
         with:
-          # Fetches full history so version bumping can commit changes back if needed
           fetch-depth: 0 
+          # Crucial: custom token use karne se [skip ci] sahi se kaam karega aur loop break hoga
+          token: ${{ secrets.GITHUB_TOKEN }} 
       
-      - name: Initialize Runtime Node.js Node Version
+      - name: Initialize Runtime Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com # FIX: Changed from github.com to the correct npm registry URL
+          registry-url: https://npm.pkg.github.com
+          # Yeh automatic aapki .npmrc file mein token configure kar dega
+          scope: '@radheshyam-dangi'
 
-      - name: Synchronize Infrastructure Cache Dependencies
+      - name: Synchronize Dependencies
         run: npm ci
 
       - name: Trigger Component Production Compile Build
@@ -35,7 +38,7 @@ jobs:
           git config --global user.email "radheshyam.dangi@infoobjects.com"
 
       - name: Automatically Bump Package Version
-        # FIX: Completed the missing step to automatically increment the patch version (e.g., 1.0.0 -> 1.0.1)
+        # [skip ci] ko commit message mein daalne se GitHub naye workflow ko trigger nahi karega
         run: npm version patch -m "chore(release): bump version to %s [skip ci]"
 
       - name: Distribute Assets Registry Target Authorization
@@ -44,5 +47,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Version Update Back to Repository
-        # Optional: Keeps your GitHub repository code in sync with the new version number
-        run: git push origin main --tags
+        # Is tarike se push karne par loop nahi banega
+        run: |
+          git push origin main --follow-tags
