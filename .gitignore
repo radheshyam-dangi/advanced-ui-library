@@ -6,11 +6,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
 node_modules
 dist
 dist-ssr
 *.local
+
+# Hide sensitive npm token file
+.npmrc
 
 # Editor directories and files
 .vscode/*
