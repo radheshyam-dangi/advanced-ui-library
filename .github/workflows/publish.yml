@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://github.com
+          registry-url: https://npm.pkg.github.com # FIX: Changed from github.com to the correct npm registry URL
 
       - name: Synchronize Infrastructure Cache Dependencies
         run: npm ci
@@ -35,7 +35,8 @@ jobs:
           git config --global user.email "radheshyam.dangi@infoobjects.com"
 
       - name: Automatically Bump Package Version
-        
+        # FIX: Completed the missing step to automatically increment the patch version (e.g., 1.0.0 -> 1.0.1)
+        run: npm version patch -m "chore(release): bump version to %s [skip ci]"
 
       - name: Distribute Assets Registry Target Authorization
         run: npm publish
