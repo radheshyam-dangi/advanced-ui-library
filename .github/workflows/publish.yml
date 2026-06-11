@@ -1,23 +1,27 @@
 name: Compile & Publish Design System Assets
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main # Triggers the workflow every time you push code to the main branch
 
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write # Required to allow automated version bumping
+      packages: write # Required to publish packages to GitHub Packages
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetches full history so version bumping can commit changes back if needed
+          fetch-depth: 0 
       
       - name: Initialize Runtime Node.js Node Version
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
+          registry-url: https://github.com
 
       - name: Synchronize Infrastructure Cache Dependencies
         run: npm ci
@@ -25,7 +29,20 @@ jobs:
       - name: Trigger Component Production Compile Build
         run: npm run build
 
+      - name: Configure Git User
+        run: |
+          git config --global user.name "radheshyam-dangi"
+          git config --global user.email "radheshyam.dangi@infoobjects.com"
+
+      - name: Automatically Bump Package Version
+        # This bumps the patch version (1.0.x) and avoids "403 version already exists" errors
+        run: npm version patch -m "chore(release): bump version to %s [skip ci]"
+
       - name: Distribute Assets Registry Target Authorization
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Version Update Back to Repository
+        # Optional: Keeps your GitHub repository code in sync with the new version number
+        run: git push origin main --tags
