@@ -1,49 +1,40 @@
-name: Compile & Publish Design System Assets
+name: Build & Publish Design System
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published] # Triggers only when you publish a release
 
 jobs:
-  publish-gpr:
+  publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
-      packages: write 
+      contents: read
+      packages: write # Required to upload to GitHub Packages
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 
-          token: ${{ secrets.GITHUB_TOKEN }} 
-      
-      - name: Initialize Runtime Node.js
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com
-          scope: '@radheshyam-dangi' 
+          scope: '@radheshyam-dangi'
 
-      - name: Synchronize Dependencies
+      - name: Install Dependencies
         run: npm ci
 
-      - name: Trigger Component Production Compile Build
+      - name: Set Package Version from Release Tag
+        # If your release tag is v1.0.1, this strips the 'v' and sets package version to 1.0.1
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          VERSION=${VERSION#v}
+          npm version $VERSION --no-git-tag-version
+
+      - name: Build Design System Assets
         run: npm run build
 
-      - name: Configure Git User
-        run: |
-          git config --global user.name "radheshyam-dangi"
-          git config --global user.email "radheshyam.dangi@infoobjects.com"
-
-      - name: Automatically Bump Package Version
-        # [skip ci] se GitHub Actions samajh jayega ki dubara workflow nahi chalana hai
-        run: npm version patch -m "chore(release): bump version to %s [skip ci]"
-
-      - name: Distribute Assets Registry Target Authorization
+      - name: Publish to GitHub Packages
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Version Update Back to Repository
-        # Sahi tarika tags aur code dono ko ek sath wapas bhejne ka
-        run: git push origin main --follow-tags
