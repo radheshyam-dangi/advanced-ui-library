@@ -1,7 +1,7 @@
 {
   "name": "@radheshyam-dangi/advanced-ui-library",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "./dist/advanced-ui-library.umd.js",
   "module": "./dist/advanced-ui-library.es.js",
