@@ -15,7 +15,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 
-          # Crucial: custom token use karne se [skip ci] sahi se kaam karega aur loop break hoga
           token: ${{ secrets.GITHUB_TOKEN }} 
       
       - name: Initialize Runtime Node.js
@@ -23,8 +22,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com
-          # Yeh automatic aapki .npmrc file mein token configure kar dega
-          scope: '@radheshyam-dangi'
+          scope: '@radheshyam-dangi' 
 
       - name: Synchronize Dependencies
         run: npm ci
@@ -38,7 +36,7 @@ jobs:
           git config --global user.email "radheshyam.dangi@infoobjects.com"
 
       - name: Automatically Bump Package Version
-        # [skip ci] ko commit message mein daalne se GitHub naye workflow ko trigger nahi karega
+        # [skip ci] se GitHub Actions samajh jayega ki dubara workflow nahi chalana hai
         run: npm version patch -m "chore(release): bump version to %s [skip ci]"
 
       - name: Distribute Assets Registry Target Authorization
@@ -47,6 +45,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Version Update Back to Repository
-        # Is tarike se push karne par loop nahi banega
-        run: |
-          git push origin main --follow-tags
+        # Sahi tarika tags aur code dono ko ek sath wapas bhejne ka
+        run: git push origin main --follow-tags
