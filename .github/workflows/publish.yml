@@ -35,8 +35,7 @@ jobs:
           git config --global user.email "radheshyam.dangi@infoobjects.com"
 
       - name: Automatically Bump Package Version
-        # This bumps the patch version (1.0.x) and avoids "403 version already exists" errors
-        run: npm version patch -m "chore(release): bump version to %s [skip ci]"
+        
 
       - name: Distribute Assets Registry Target Authorization
         run: npm publish
