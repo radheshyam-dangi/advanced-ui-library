@@ -16,5 +16,10 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #fafafa;
+  background-color: #eee9e9d0;
+}
+
+@keyframes shimmer {
+  from { bg-position: 1rem 0; }
+  to { bg-position: 0 0; }
 }

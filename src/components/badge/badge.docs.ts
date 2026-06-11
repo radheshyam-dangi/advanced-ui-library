@@ -1,0 +1,25 @@
+export const badgeDocSchema = {
+  name: "Badge",
+  description: "A compact status label for categorising, counting, or flagging state — with dot, icon, floating overlay, and dismiss options.",
+  propsList: [
+    { name: "variant", type: "'default'|'success'|'warning'|'danger'|'info'|'purple'", default: "'default'", description: "Semantic colour variant." },
+    { name: "size", type: "'sm'|'md'|'lg'", default: "'md'", description: "Controls font size, heights, and layout scaling." },
+    { name: "dot", type: "boolean", default: "false", description: "Prepends a coloured status dot." },
+    { name: "icon", type: "ReactNode", default: "undefined", description: "Icon rendered inside the badge." },
+    { name: "rounded", type: "'md'|'full'", default: "'full'", description: "Corner radius — pill vs rounded rect." },
+    { name: "outline", type: "boolean", default: "false", description: "Renders with border instead of filled background." },
+    { name: "dismissible", type: "boolean", default: "false", description: "Adds a mini × dismiss button next to the content." },
+    { name: "onDismiss", type: "() => void", default: "undefined", description: "Fires when the dismiss button is clicked to remove or clear notifications." },
+    { name: "count", type: "number", default: "undefined", description: "Numeric value displayed inside the badge." },
+    { name: "maxCount", type: "number", default: "99", description: "Caps displayed count, shows 'X+' above this value." },
+    { name: "animate", type: "boolean", default: "false", description: "Ping animation on the dot indicator." },
+    { name: "isFloating", type: "boolean", default: "false", description: "Positions the badge absolutely on the top-right corner of its relative parent." },
+  ],
+  accessibility: [
+    "role='status' ensures dynamic count updates are announced.",
+    "Badge colour is never the sole meaning indicator — label always present.",
+    "Dismiss button carries aria-label for screen reader users and halts event bubbling.",
+    "Count badges expose value + context via aria-label.",
+    "Animated ping respects prefers-reduced-motion via Tailwind.",
+  ],
+}

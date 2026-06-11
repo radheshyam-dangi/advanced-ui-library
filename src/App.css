@@ -1,184 +1,589 @@
-/* .counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+@import "tailwindcss";
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+@theme inline {
+  --color-primary: #aa3bff;
+  --color-primary-hover: #912ee6;
+  --color-secondary: #f4f3ec;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-dark-bg: #1e1e1e;
+  --color-sidebar-bg: #181818;
+  --color-main-bg: #121212;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
 }
 
-#center {
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-main-bg);
+  color: #ffffff;
+  overflow: hidden; /* CRITICAL: Disables main browser window body scrolling */
+}
+
+/* Base App Layout Container */
+.doc-site-container {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  height: 100vh; /* Lock to exact viewport window height */
+  width: 100vw;
+  overflow: hidden;
 }
 
-#next-steps {
+.doc-body {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  flex: 1;
+  height: calc(100vh - 0px); /* Fill remaining space perfectly */
+  overflow: hidden;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+/* --------------------------------------------------
+   Sidebar Menu Layout Design (Independent Scrolling)
+-------------------------------------------------- */
+.doc-sidebar {
+  width: 290px;
+  background-color: var(--color-sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto; /* CRITICAL: Enables clean scrolling when component list grows long */
+  box-sizing: border-box;
 }
 
-#next-steps ul {
+/* Custom smooth scrollbar styling for sidebar */
+.doc-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.doc-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.doc-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  padding-left: 0.5rem;
+  flex-shrink: 0; /* Prevents brand header from getting crushed */
+}
+
+.brand-logo {
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 900;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.brand-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.brand-sub {
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.sidebar-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #71717a;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.doc-sidebar nav {
+  flex: 1;
+}
+
+.doc-sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.link-left-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+.mock-checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1px solid #3f3f46;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: all 0.15s ease;
+}
+
+.mock-checkbox.checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.check-mark {
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.component-name-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e4e4e7;
+}
+
+.prop-count-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.15rem 0.4rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-link.active {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.active .component-name-text {
+  color: #ffffff;
+}
+
+.sidebar-link.active .prop-count-badge {
+  background-color: rgba(170, 59, 255, 0.15);
+  color: #c084fc;
+  border-color: rgba(170, 59, 255, 0.2);
+}
+
+.sidebar-link:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --------------------------------------------------
+   Workspace Shell Container (Static Header/Tabs, Isolated Content Scrolling)
+-------------------------------------------------- */
+.doc-main-content {
+  flex: 1;
+  padding: 2.5rem 2.5rem 0 2.5rem; /* Remove bottom padding to layout footer perfectly */
+  background-color: var(--color-main-bg);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* CRITICAL: Keeps header, tab triggers, and footer strictly static */
+  box-sizing: border-box;
+}
+
+.title-area {
+  flex-shrink: 0; /* Prevents title info rows from resizing */
+}
+
+.title-area h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.03em;
+}
+
+.description-text {
+  color: #a1a1aa;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.meta-badge-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.meta-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+.meta-pill.text-p { background: rgba(168, 85, 247, 0.1); color: #c084fc; border-color: rgba(168, 85, 247, 0.2); }
+.meta-pill.text-e { background: rgba(20, 184, 166, 0.1); color: #2dd4bf; border-color: rgba(20, 184, 166, 0.2); }
+.meta-pill.text-t { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border-color: rgba(59, 130, 246, 0.2); }
+
+.workspace-tabs-nav {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0rem; /* Handled inside layout viewports */
+  flex-shrink: 0; /* Pinned navigation row */
+}
+
+.tab-nav-btn {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.75rem 0.25rem;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.tab-nav-btn:hover {
+  color: #e4e4e7;
+}
+
+.tab-nav-btn.active {
+  color: #ffffff;
+}
+
+.tab-nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+/* --------------------------------------------------
+   Tab Viewport: Only content inside here is allowed to scroll
+-------------------------------------------------- */
+.tab-viewport-content {
+  flex: 1;
+  overflow: hidden; /* Keeps standard viewport frame unscrollable */
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.animated-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------
+   PLAYGROUND PREVIEW TAB VIEW (FIXED RESOLUTION UPGRADED OVERFLOWS)
+-------------------------------------------------- */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 2rem;
+  align-items: stretch; /* Match viewport height boundaries */
+  height: 100%;
+  overflow: hidden; /* Keeps individual section grids nested */
+}
+
+/* LIVE CANVAS SIDE: Upgraded to isolate view layouts and support endless scrolling vertical loads */
+.canvas-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Bounds child components */
+}
+
+.live-preview-box {
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  flex: 1; /* Automatically expand to absorb vertical space safely */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  
+  /* FIXED RESOLUTION RULES: Safely lets components overflow scroll cleanly when built long */
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+
+/* Custom smooth scrollbar styling for live preview canvas block */
+.live-preview-box::-webkit-scrollbar {
+  width: 5px;
+}
+.live-preview-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+.live-preview-box::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+/* ATTRIBUTE PLAYGROUND (Isolates scrolling container) */
+.controls-section {
+  height: 100%;
+  overflow: hidden; /* Keep container crisp */
+  display: flex;
+  flex-direction: column;
+}
+
+.controls-form {
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: 100%; /* Bind boundary bounds */
+  overflow-y: auto; /* CRITICAL: Enables independent scrolling for dynamic knobs/switches */
+}
+
+/* Custom smooth scrollbar styling for controls */
+.controls-form::-webkit-scrollbar {
+  width: 5px;
+}
+.controls-form::-webkit-scrollbar-track {
+  background: transparent;
+}
+.controls-form::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+.controls-header {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #71717a;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.control-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a1a1aa;
+}
+
+.control-group select,
+.control-group input[type="text"],
+.control-group input[type="number"] {
+  background-color: #101010;
+  border: 1px solid var(--color-border);
+  color: white;
+  padding: 0.55rem;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.control-group select:focus,
+.control-group input:focus {
+  border-color: var(--color-primary);
+}
+
+.checkbox-row {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox-row label {
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------
+   SCROLLABLE WRAPPERS FOR REMAINING TABS (Code, Specs, A11y)
+-------------------------------------------------- */
+.code-generation-box,
+.specs-section,
+.a11y-section {
+  flex: 1;
+  overflow-y: auto; /* CRITICAL: If tables/lists are deep, scroll content independently here */
+  max-height: 100%;
+  padding-right: 0.5rem;
+}
+
+/* Webkit Scrollbars for standalone tabs */
+.code-generation-box::-webkit-scrollbar,
+.specs-section::-webkit-scrollbar,
+.a11y-section::-webkit-scrollbar {
+  width: 5px;
+}
+.code-generation-box::-webkit-scrollbar-thumb,
+.specs-section::-webkit-scrollbar-thumb,
+.a11y-section::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+.code-generation-box pre {
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.code-generation-box code {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.props-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+.props-table th {
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem;
+  color: #a1a1aa;
+  font-weight: 600;
+  background-color: #1a1a1a;
+  position: sticky;
+  top: 0; /* Sticky headers inside data table component scrolling */
+  z-index: 10;
+}
+
+.props-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+}
+
+.prop-name { color: #c084fc; }
+.prop-type code { background: #101010; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #38bdf8; }
+
+.a11y-list {
+  list-style: none;
+  padding: 1.5rem;
+  margin: 0;
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.a11y-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #d4d4d8;
+}
+
+.check-icon { color: #22c55e; font-weight: bold; }
+
+/* --------------------------------------------------
+   STATIC PANEL CONTROLLER FOOTER NAVIGATION
+-------------------------------------------------- */
+.doc-footer-navigation {
+  border-top: 1px solid var(--color-border);
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--color-main-bg);
+  flex-shrink: 0; /* Keeps layout row permanently pinned to screen bottom */
+  margin-top: auto;
+}
+
+.nav-btn {
+  background-color: #161616;
+  border: 1px solid var(--color-border);
+  color: white;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.nav-btn:disabled {
+  opacity: 0.15;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .workspace-grid { 
+    grid-template-columns: 1fr; 
+    overflow-y: auto; /* Fallback internal column container stacked scrolling */
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .controls-section {
+    height: auto;
+    overflow: visible;
   }
-} */
+  .controls-form {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
